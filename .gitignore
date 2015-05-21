@@ -1,0 +1,11 @@
+# File types #
+##############
+*.pyc
+*.swo
+*.swp
+*.swn
+*.ipnotification
+local_settings.py
+# OS-level stuff #
+###############
+.DS_Store
