@@ -15,7 +15,13 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+import minimal.urls
+import filefield.urls
+import chunked.urls
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^minimal/', include(minimal.urls)),
+    url(r'^filefield/', include(filefield.urls)),
+    url(r'^chunked/', include(chunked.urls)),
 ]

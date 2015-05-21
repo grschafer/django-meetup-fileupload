@@ -37,6 +37,9 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'minimal',
+    'filefield',
+    'chunked',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -55,7 +58,11 @@ ROOT_URLCONF = 'file_upload.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            'minimal/templates/minimal',
+            'filefield/templates/filefield',
+            'chunked/templates/chunked',
+            ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -100,3 +107,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Media files
+
+MEDIA_ROOT = '/tmp/uploads/'

@@ -1,3 +1,8 @@
-from django.shortcuts import render
+from django.template.response import TemplateResponse
 
-# Create your views here.
+def upload(request):
+    if request.method == "POST":
+        import ipdb; ipdb.set_trace()
+        return TemplateResponse(request, 'upload.html')
+    else:
+        return TemplateResponse(request, 'upload.html')
