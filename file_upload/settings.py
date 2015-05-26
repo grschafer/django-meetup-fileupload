@@ -110,4 +110,4 @@ STATIC_URL = '/static/'
 
 # Media files
 
-MEDIA_ROOT = '/tmp/uploads/'
+MEDIA_ROOT = '/data/uploads/'
