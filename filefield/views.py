@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
-from django.shortcuts import render
 from django.template.response import TemplateResponse
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from filefield.forms import UploadForm
-from filefield.models import Upload
 
 def upload(request):
     if request.method == 'POST':

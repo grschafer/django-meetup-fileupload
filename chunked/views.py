@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from django.shortcuts import render
-from django.template.response import TemplateResponse
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
@@ -53,7 +51,7 @@ def write_file_piece(request, upload):
         for piece in fin.chunks():
             fout.write(piece)
 
-    chunk = Chunk.objects.create(
+    Chunk.objects.create(
             upload=upload,
             index=index,
             size=size,
