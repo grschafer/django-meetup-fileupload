@@ -24,6 +24,7 @@ def upload(request):
             upload = Upload.objects.get(file=filename)
             write_file_piece(request, upload)
             return JsonResponse({'status': 'success'})
+
         else:
             num_chunks = int(request.POST['num_chunks'])
             filesize = int(request.POST['filesize'])
@@ -39,7 +40,7 @@ def upload(request):
             return JsonResponse({'status': 'success'})
 
 def write_file_piece(request, upload):
-    # TODO: use a form, to not need int() casting?
+    # TODO: use a form, to not need int() casting
     index = int(request.POST['index'])
     size = int(request.POST['size'])
     offset = index * upload.chunk_size
@@ -47,9 +48,10 @@ def write_file_piece(request, upload):
     fin = request.FILES['file']
     with io.FileIO(upload.file.path, 'r+b') as fout:
         fout.seek(offset)
-        # TODO: or is it going to be in FILES?
+
         for piece in fin.chunks():
             fout.write(piece)
+
     chunk = Chunk.objects.create(
             upload=upload,
             index=index,

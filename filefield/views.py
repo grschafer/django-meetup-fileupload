@@ -9,9 +9,6 @@ def upload(request):
     if request.method == 'POST':
         form = UploadForm(request.POST, request.FILES)
         if form.is_valid():
-            # if not ModelForm
-            #new_file = Upload(file=request.FILES['file'])
-            #new_file.save()
             form.save()
 
             # Redirect to the document list after POST

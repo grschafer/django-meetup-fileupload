@@ -1,16 +1,13 @@
-# TODO: implement client
-# param: file
-# POST
-# chop it up with filechunkio
-# PUT each piece (in parallel)
+# -*- coding: utf-8 -*-
 import argparse
 from filechunkio import FileChunkIO
 import requests
 import os
 import math
 
-UPLOAD_URL = 'http://192.168.1.231:8000/chunked/'
-CHUNK_SIZE = 5
+UPLOAD_URL = 'http://10.1.10.242:8000/chunked/'
+UPLOAD_URL_NOCHUNK = 'http://10.1.10.242:8000/minimal/'
+CHUNK_SIZE = 5 * 1024 * 1024 # 5 mb chunk
 
 class Chunk(object):
     def __init__(self, index, offset, bytes):
@@ -33,9 +30,9 @@ def upload_file(filepath):
     num_chunks = math.ceil(filesize / float(CHUNK_SIZE))
     missing_chunks = None
     resp = requests.get(UPLOAD_URL, params={'filename': filename})
+
     if resp.ok:
         print('Resuming existing upload:', filepath)
-        # TODO: jump to PUTs (only for missing chunks)
         missing_chunks = resp.json()['missing_chunks']
     else:
         print('Starting new upload:', filepath)
@@ -44,6 +41,7 @@ def upload_file(filepath):
             'num_chunks': num_chunks,
             'chunk_size': CHUNK_SIZE,
             }))
+
     for chunk in gen_chunks(num_chunks, filesize, missing_chunks):
         print('sending chunk', chunk.index, chunk.offset, chunk.bytes)
         with FileChunkIO(filepath, 'rb', offset=chunk.offset, bytes=chunk.bytes) as fin:
@@ -53,10 +51,28 @@ def upload_file(filepath):
                     }
             files = {'file': fin}
             print(requests.post(UPLOAD_URL, params={'filename': filename}, data=metadata, files=files))
-        break
+        # NOTE: uncomment the break to upload 1 chunk at a time (resumable)
+        #break
 
+import time
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('path', help='Path to file to upload')
+    parser.add_argument('-n', '--not-chunked',
+            default=False,
+            action='store_true',
+            help='Use simple upload instead of chunked')
     args = parser.parse_args()
-    upload_file(args.path)
+
+    if args.not_chunked:
+        print('Using simple upload scheme')
+        start = time.time()
+        with open(args.path, 'rb') as fin:
+            requests.post(UPLOAD_URL_NOCHUNK, files={'file': fin})
+        end = time.time()
+    else:
+        print('Using chunked upload scheme')
+        start = time.time()
+        upload_file(args.path)
+        end = time.time()
+    print('Took', end - start, 'seconds')
