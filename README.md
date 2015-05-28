@@ -1,15 +1,6 @@
-## Project setup
-
-django-admin startproject file\_upload
-cd file\_upload
-django-admin startapp minimal
-django-admin startapp filefield
-django-admin startapp chunked
-
-
 ## Database Setup
 
-python3 manage.py migrate
+`python3 manage.py migrate`
 
 
 ## To use
